@@ -6,17 +6,21 @@ import {
   Heading,
   Center,
   Button,
+  Pressable,
+  Icon,
 } from "native-base";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 
 const Login = ({ navigation }) => {
   const [data,setData] = useState("");
+  const [show, setShow] = useState(false);
 
 
   const handleClick = async(data) => {
     // console.log(data)
        try {
-            const url = 'http://192.168.1.6:3000/users/userlogin';
+            const url = 'http://192.168.1.6:3000/users/login';
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -47,34 +51,43 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    // 192.168.1.6
-    <NativeBaseProvider>
-      <Center>
-        <Container mt="32">
-          <Heading size="lg" color="blue.400">
+    <NativeBaseProvider>      
+        <Container h="100%" w="100%" maxWidth="100%" bg="violet.700">
+        <Center mt="72" ml="48">
+          <Heading size="lg" color="coolGray.50">
             Mapstix
           </Heading>
-          <Input
-            mt="50"
-            placeholder="Email"
-            onChangeText={(text) => setData({"email":text})}
-          ></Input>
            <Input
             mt="50"
             placeholder="Username"
+            variant="underlined"
+            borderColor="coolGray.50"
+            w="96"
+            style={{ color: "#fff" }}
+            focusOutlineColor="coolGray.50"
             onChangeText={(text) => setData({...data,"username":text})}
           ></Input>
           <Input
             mt="50"
-            secureTextEntry={true}
+            // secureTextEntry={true}
             placeholder="Enter password"
+            variant="underlined"
+            borderColor="coolGray.50"
+            w="96"
+            style={{ color: "#fff" }}
+            focusOutlineColor="coolGray.50"
             onChangeText={(text) => setData({...data,"password":text})}
+            type={show ? "text" : "password"}
+            InputRightElement={<Pressable onPress={() => setShow(!show)}>
+            <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
+          </Pressable>}
           ></Input>
-          <Button mt="20" colorScheme="indigo" onPress={() => handleClick(data)}>
-            Login
+          <Button mt="20" w="56" colorScheme="violet" onPress={() => handleClick(data)}>
+          <Text style={{color: '#fff'}}>Login</Text>
           </Button>
+          </Center>
         </Container>
-      </Center>
+      
     </NativeBaseProvider>
   );
 };

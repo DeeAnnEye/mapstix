@@ -15,8 +15,11 @@ const Welcome = ({navigation}) => {
         <NativeBaseProvider >
           {/* <Box backgroundColor="violet.800"> */}
          
-            <Container h="100%" w="100%" maxWidth="100%" bg="violet.800">
+            <Container h="100%" w="100%" maxWidth="100%" bg="violet.700">
             <Center mt="72" ml="48" pl="5">
+            <Heading size="lg" color="coolGray.50">
+            Mapstix
+          </Heading>
             <Button
                mt="20"
                colorScheme="violet"
@@ -25,8 +28,9 @@ const Welcome = ({navigation}) => {
                navigation.navigate('Login')}>
                 Login
               </Button>
+              <Text  mt="10" ml="56" style={{color: '#fff'}}>Don't have an Account?</Text>
             <Button
-               mt="10"
+               
                colorScheme="muted"
                variant="outline"
                w="96"

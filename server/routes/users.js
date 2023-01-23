@@ -10,9 +10,14 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/userlogin', function(req, res, next) {
+router.post('/login', function(req, res, next) {
+  // todo hgetall
+});
+router.post('/signup', function(req, res, next) {
+  redis.hset(req.body.username,"username",req.body.username);
   redis.hset(req.body.username,"email",req.body.email);
   redis.hset(req.body.username,"password",req.body.password);
+  // todo password validation
   console.log("success")
   res.status(200).send('login success');
 });
