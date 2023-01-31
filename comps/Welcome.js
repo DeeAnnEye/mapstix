@@ -1,49 +1,69 @@
-import React from 'react';
+import React from "react";
 import {
-    NativeBaseProvider,
-    Input,
-    Text,
-    Container,
-    Heading,
-    Center,
-    Button,
-    Box,
-  } from "native-base";
+  NativeBaseProvider,
+  Input,
+  Text,
+  Container,
+  Heading,
+  Center,
+  Button,
+  Box,
+  Link,
+  VStack,
+} from "native-base";
 
-const Welcome = ({navigation}) => {
-    return (
-        <NativeBaseProvider >
-          {/* <Box backgroundColor="violet.800"> */}
-         
-            <Container h="100%" w="100%" maxWidth="100%" bg="violet.700">
-            <Center mt="72" ml="48" pl="5">
-            <Heading size="lg" color="coolGray.50">
+const Welcome = ({ navigation}) => {
+  return (
+    <NativeBaseProvider>
+      {/* <Box backgroundColor="violet.800"> */}
+
+      <Container h="100%" w="100%" maxWidth="100%"  bg="coolGray.50">
+
+      {/* <VStack space={4} alignItems="center">
+      <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3} />
+      <Center w="64" h="20" bg="indigo.500" rounded="md" shadow={3} />
+      <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} />
+    </VStack> */}
+       
+          <Heading mt="20" size="lg" alignSelf="center" color="violet.700">
             Mapstix
           </Heading>
-            <Button
-               mt="20"
-               colorScheme="violet"
-               w="96"
-               onPress={()=>
-               navigation.navigate('Login')}>
-                Login
-              </Button>
-              <Text  mt="10" ml="56" style={{color: '#fff'}}>Don't have an Account?</Text>
-            <Button
-               
-               colorScheme="muted"
-               variant="outline"
-               w="96"
-               onPress={()=>
-               navigation.navigate('Register')}>
-                 <Text style={{color: '#fff'}}>Sign Up</Text>
-              </Button>              
-              </Center>
-            </Container>
-          
-          {/* </Box> */}
-        </NativeBaseProvider>
-      );
-}
+          <Button
+            mt="40"
+            colorScheme="violet"
+            // variant="outline"
+            alignSelf="center"
+            w="56"
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text color="coolGray.50">Login</Text>
+          </Button>
+          <Text mt="3" alignSelf="center" color="violet.700">
+            Don't have an account?{" "}
+            <Link
+              isExternal
+              _text={{
+                color: "violet.700",
+              }}
+              _hover={{
+                _text: {
+                  _light: {
+                    color: "violet.500",
+                  },
+                  color: "violet.500",
+                },
+              }}
+              onPress={() => navigation.navigate("Register")}
+            >
+              Sign Up
+            </Link>
+          </Text>
 
-export default Welcome
+      </Container>
+
+      {/* </Box> */}
+    </NativeBaseProvider>
+  );
+};
+
+export default Welcome;
