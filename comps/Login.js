@@ -11,11 +11,20 @@ import {
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import {AsyncStorage} from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const [data, setData] = useState("");
   const [show, setShow] = useState(false);
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('userId', value.userId)
+      await AsyncStorage.setItem('userName', value.userName)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const handleClick = async (data) => {
     try {
@@ -36,10 +45,7 @@ const Login = () => {
         return;
     } else {
         const data = await response.json();
-        AsyncStorage.setItem("userId",data.userId)
-        AsyncStorage.setItem("userName",data.userName)
-        alert("login successful")
-        // setState(true);
+        storeData(data);
     }
     } catch (err) {
       console.log(err);

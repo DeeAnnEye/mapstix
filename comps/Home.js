@@ -12,35 +12,35 @@ import {
 } from "native-base";
 import { StyleSheet } from "react-native";
 import MapView, { Marker, AnimatedRegion } from "react-native-maps";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
+  const removeData = async () => {
+    try {
+    await AsyncStorage.removeItem('userId');
+    } catch (error) {
+    console.log(error);
+    }
+    };
 
   return (
     <NativeBaseProvider>
-      {/* <Box backgroundColor="violet.800"> */}
-
       <Container h="100%" w="100%" maxWidth="100%" bg="coolGray.50">
-        {/* <Center mt="72" ml="48" pl="5"> */}
-        <Heading mt="20" size="lg" color="violet.700">
-          Mapstix Home
-        </Heading>
         <MapView
-         
-          followUserLocation={true}         
+          followUserLocation={true}
           zoomEnabled={true}
-          showsUserLocation={true}         
-          style={StyleSheet.absoluteFillObject}
+          showsUserLocation={true}
+          style={{ width: "100%", height: "90%" }}
           provider={MapView.PROVIDER_GOOGLE}
-          // initialRegion={{
-          //   latitude: 28.579660,
-          //   longitude: 77.321110,
-          //   latitudeDelta: 0.0922,
-          //   longitudeDelta: 0.0421,
-          // }}
         />
-         
-        {/* </MapView> */}
-        {/* </Center> */}
+
+        <Button
+          colorScheme="violet"
+          style={{ width: "50%", height: "10%" }}
+          onPress={() => removeData()}
+        >
+          <Text style={{ color: "#fff" }}>Logout</Text>
+        </Button>
       </Container>
     </NativeBaseProvider>
   );
