@@ -14,10 +14,11 @@ import { StyleSheet } from "react-native";
 import MapView, { Marker, AnimatedRegion } from "react-native-maps";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const removeData = async () => {
     try {
     await AsyncStorage.removeItem('userId');
+    navigation.navigate('Auth')
     } catch (error) {
     console.log(error);
     }
