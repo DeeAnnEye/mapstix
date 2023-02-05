@@ -1,23 +1,37 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import AppNavigator from "./AppNavigator";
 import AuthNavigator from "./AuthNavigator";
+import {
+  NativeBaseProvider,
+  Input,
+  Text,
+  Container,
+  Heading,
+  Center,
+  Button,
+  Pressable,
+  Icon,
+} from "native-base";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
-const Index = () => {
-
+const Index = ({ navigation }) => {
   return (
-    <NavigationContainer>
-    <Stack.Navigator screenOptions={{
-    headerShown: false,
-  }}
-  initialRouteName="App"
-  >
-      <Stack.Screen name="Auth" component={AuthNavigator} />
-      <Stack.Screen name="App" component={AppNavigator} />
-    </Stack.Navigator>
-  </NavigationContainer>
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="App"
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Auth" component={AuthNavigator} />
+          <Stack.Screen name="App" component={AppNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NativeBaseProvider>
   );
 };
 

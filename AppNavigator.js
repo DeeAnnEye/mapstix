@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Home from "./comps/Home";
 import AuthNavigator from "./AuthNavigator";
+import {
+  NativeBaseProvider,
+  Input,
+  Text,
+  Container,
+  Heading,
+  Center,
+  Button,
+  Box,
+  Link,
+  VStack,
+} from "native-base";
 const Stack = createNativeStackNavigator();
 
-const AppNavigator = () => {
-const [state, setState] = useState(false);
+const AppNavigator = ({ navigation }) => {
+  const [state, setState] = useState(false);
 
   useEffect(() => {
-    retrieveData()
+    retrieveData();
   });
 
   const retrieveData = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      console.log(userId)
+      const userId = await AsyncStorage.getItem("userId");
+      // console.log(userId)
       if (userId === null) {
         setState(false);
-      }
-      else{
+      } else {
         setState(true);
       }
     } catch (error) {
@@ -28,17 +39,40 @@ const [state, setState] = useState(false);
     }
   };
 
-  return (
-    !state ?
-   ( <AuthNavigator/> ) :
-   (
-      <Stack.Navigator screenOptions={{
-      headerShown: false,
-    }}>
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
+  const removeData = async () => {
+    try {
+      await AsyncStorage.removeItem("userId");
+      navigation.navigate("Auth");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-   )
+  return !state ? (
+    <AuthNavigator />
+  ) : (
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{
+          title: "MapStix",
+          headerStyle: {
+            backgroundColor: "#fff",
+          },
+          headerTintColor: "#7F00FF",
+          headerRight: () => (
+            <Button
+              title="test"
+              colorScheme="violet"
+              onPress={() => removeData()}
+            >
+              <Text>Logout</Text>
+            </Button>
+          ),
+        }}
+        name="Home"
+        component={Home}
+      />
+    </Stack.Navigator>
   );
 };
 

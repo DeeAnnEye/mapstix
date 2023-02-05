@@ -45,11 +45,11 @@ const Login = ({ navigation }) => {
       } else {
         const data = await response.json();
         storeData(data);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'App' }]
-     })
-        // navigation.goBack()
+        // navigation.reset({
+        //   index: 0,
+        //   routes: [{ name: "App" }],
+        // });
+        navigation.navigate('App')
       }
     } catch (err) {
       console.log(err);
