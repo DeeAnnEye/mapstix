@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   FlatList,
@@ -9,12 +9,43 @@ import {
   Text,
   Spacer,
   Center,
-  Fab, 
+  Fab,
   AddIcon,
+  Modal,
+  FormControl,
+  Input,
+  Button,
+  Image,
   NativeBaseProvider,
 } from "native-base";
+import * as ImagePicker from "expo-image-picker";
 
 const GroupScreen = () => {
+  const [placement, setPlacement] = useState(undefined);
+  const [image, setImage] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const openModal = (placement) => {
+    setOpen(true);
+    setPlacement(placement);
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   const data = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -58,6 +89,60 @@ const GroupScreen = () => {
   ];
   return (
     <NativeBaseProvider>
+      <Modal isOpen={open} onClose={() => setOpen(false)} safeAreaTop={true}>
+        <Modal.Content maxWidth="350">
+          <Modal.CloseButton />
+          <Modal.Header>Create Group</Modal.Header>
+          <Modal.Body>
+            <FormControl>
+              <FormControl.Label>Group Name</FormControl.Label>
+              <Input />
+            </FormControl>
+            <FormControl>
+            {image && (
+                <Image
+                  my="7"
+                  source={{ uri: image }}
+                  alt="group-img"
+                  size={150}
+                  alignSelf="center"
+                  borderRadius={100}
+                />
+              )}
+              <Button
+                colorScheme="violet"
+                title="Choose Group Avatar"
+                mt="7"
+                onPress={pickImage}
+              >
+                <Text style={{ color: "#fff" }}>Choose Group Avatar</Text>
+                </Button>
+              
+            </FormControl>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="ghost"
+                colorScheme="violet"
+                onPress={() => {
+                  setOpen(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onPress={() => {
+                  setOpen(false);
+                }}
+                colorScheme="violet"
+              >
+                Create
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
       <Box mt="5">
         <FlatList
           data={data}
@@ -116,11 +201,12 @@ const GroupScreen = () => {
         />
       </Box>
       <Fab
-      placement="bottom-right"
-      colorScheme="violet"
-      size="lg"
-      icon={<AddIcon/>}
-    />
+        placement="bottom-right"
+        colorScheme="violet"
+        size="lg"
+        onPress={() => openModal("center")}
+        icon={<AddIcon />}
+      />
     </NativeBaseProvider>
   );
 };
