@@ -19,11 +19,13 @@ import {
   NativeBaseProvider,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const GroupScreen = () => {
   const [placement, setPlacement] = useState(undefined);
   const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
+  const [group, setGroup] = useState("");
 
   const openModal = (placement) => {
     setOpen(true);
@@ -43,6 +45,49 @@ const GroupScreen = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      // setGroup({ ...group, groupImage: result.assets[0].uri })
+    }
+  };
+
+  const createGroup = async (group) => {
+    const userId = await AsyncStorage.getItem("userId");
+    const formData = new FormData();
+    // formData.append('groupDetails',{
+    //   admin_id : userId,
+    //   ...group
+    // })
+    formData.append('groupName',group);
+    formData.append('admin_id',userId);
+    formData.append('groupAvatar',{
+      name : new Date() + "_group",
+      uri : image,
+      type : 'image/jpg'
+    })
+   
+
+    // let form = { ...group, admin_id: userId, ...formData };
+    // console.log(form);
+
+    try {
+      const url = "http://192.168.1.6:3000/groups/create";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          'content-type': 'multipart/form-data',
+        },
+        body: formData,
+      });
+      if (!response.ok) {
+        const err = await response.json();
+        alert("login failed");
+        console.log("Looks like there was a problem.", err);
+        return;
+      } else {
+        const data = await response.json();
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -96,10 +141,12 @@ const GroupScreen = () => {
           <Modal.Body>
             <FormControl>
               <FormControl.Label>Group Name</FormControl.Label>
-              <Input />
+              <Input
+              onChangeText={(text) => setGroup({ ...group, groupName: text })}
+              />
             </FormControl>
             <FormControl>
-            {image && (
+              {image && (
                 <Image
                   my="7"
                   source={{ uri: image }}
@@ -108,7 +155,8 @@ const GroupScreen = () => {
                   alignSelf="center"
                   borderRadius={100}
                 />
-              )}
+              ) 
+              }
               <Button
                 colorScheme="violet"
                 title="Choose Group Avatar"
@@ -116,8 +164,7 @@ const GroupScreen = () => {
                 onPress={pickImage}
               >
                 <Text style={{ color: "#fff" }}>Choose Group Avatar</Text>
-                </Button>
-              
+              </Button>
             </FormControl>
           </Modal.Body>
           <Modal.Footer>
@@ -131,12 +178,7 @@ const GroupScreen = () => {
               >
                 Cancel
               </Button>
-              <Button
-                onPress={() => {
-                  setOpen(false);
-                }}
-                colorScheme="violet"
-              >
+              <Button onPress={() => createGroup(group)} colorScheme="violet">
                 Create
               </Button>
             </Button.Group>
