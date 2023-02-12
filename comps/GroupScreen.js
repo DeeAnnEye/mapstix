@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   FlatList,
@@ -27,6 +27,16 @@ const GroupScreen = () => {
   const [open, setOpen] = useState(false);
   const [groupname, setGroupname] = useState("");
 
+  useEffect(() => {
+    getGroups();
+  });
+
+  const getGroups = () => {
+    fetch("http://192.168.1.6:3000/groups/findgroups")
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  };
+
   const openModal = (placement) => {
     setOpen(true);
     setPlacement(placement);
@@ -52,29 +62,20 @@ const GroupScreen = () => {
   const createGroup = async () => {
     const userId = await AsyncStorage.getItem("userId");
     const formData = new FormData();
-    // formData.append('groupDetails',{
-    //   admin_id : userId,
-    //   ...group
-    // })
-    formData.append('groupName',groupname);
-    formData.append('admin_id',userId);
-    formData.append('groupAvatar',{
-      name : new Date() + "_group",
-      uri : image,
-      type : 'image/jpg'
-    })
-   
-
-    // let form = { ...group, admin_id: userId, ...formData };
-    // console.log(form);
-
+    formData.append("groupName", groupname);
+    formData.append("admin_id", userId);
+    formData.append("groupAvatar", {
+      name: new Date() + "_group",
+      uri: image,
+      type: "image/jpg",
+    });
     try {
       const url = "http://192.168.1.6:3000/groups/create";
       const response = await fetch(url, {
         method: "POST",
         headers: {
           Accept: "application/json",
-          'content-type': 'multipart/form-data',
+          "content-type": "multipart/form-data",
         },
         body: formData,
       });
@@ -84,7 +85,8 @@ const GroupScreen = () => {
         console.log("Looks like there was a problem.", err);
         return;
       } else {
-        const data = await response.json();
+        const msg = await response.json();
+        setOpen(false);
       }
     } catch (err) {
       console.log(err);
@@ -141,9 +143,7 @@ const GroupScreen = () => {
           <Modal.Body>
             <FormControl>
               <FormControl.Label>Group Name</FormControl.Label>
-              <Input
-              onChangeText={(text) => setGroupname(text)}
-              />
+              <Input onChangeText={(text) => setGroupname(text)} />
             </FormControl>
             <FormControl>
               {image && (
@@ -155,8 +155,7 @@ const GroupScreen = () => {
                   alignSelf="center"
                   borderRadius={100}
                 />
-              ) 
-              }
+              )}
               <Button
                 colorScheme="violet"
                 title="Choose Group Avatar"
