@@ -9,7 +9,7 @@ const upload = multer({ dest: './public/uploads' })
 
 router.post("/create",upload.single('groupAvatar'), function (req, res, next) {
     const id = uuidv4();
-    console.log(req.file, req.body)
+    console.log(req.file.filename, req.body.admin_id)
     // if (req.body.cPassword === req.body.password) {
     //   redis.hset(req.body.username, "id", id);
     //   redis.hset(req.body.username, "username", req.body.username);

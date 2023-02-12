@@ -25,7 +25,7 @@ const GroupScreen = () => {
   const [placement, setPlacement] = useState(undefined);
   const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
-  const [group, setGroup] = useState("");
+  const [groupname, setGroupname] = useState("");
 
   const openModal = (placement) => {
     setOpen(true);
@@ -49,14 +49,14 @@ const GroupScreen = () => {
     }
   };
 
-  const createGroup = async (group) => {
+  const createGroup = async () => {
     const userId = await AsyncStorage.getItem("userId");
     const formData = new FormData();
     // formData.append('groupDetails',{
     //   admin_id : userId,
     //   ...group
     // })
-    formData.append('groupName',group);
+    formData.append('groupName',groupname);
     formData.append('admin_id',userId);
     formData.append('groupAvatar',{
       name : new Date() + "_group",
@@ -142,7 +142,7 @@ const GroupScreen = () => {
             <FormControl>
               <FormControl.Label>Group Name</FormControl.Label>
               <Input
-              onChangeText={(text) => setGroup({ ...group, groupName: text })}
+              onChangeText={(text) => setGroupname(text)}
               />
             </FormControl>
             <FormControl>
@@ -178,7 +178,7 @@ const GroupScreen = () => {
               >
                 Cancel
               </Button>
-              <Button onPress={() => createGroup(group)} colorScheme="violet">
+              <Button onPress={() => createGroup()} colorScheme="violet">
                 Create
               </Button>
             </Button.Group>
