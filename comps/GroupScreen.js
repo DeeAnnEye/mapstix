@@ -25,16 +25,20 @@ const GroupScreen = () => {
   const [placement, setPlacement] = useState(undefined);
   const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
+  const [groups, setGroups] = useState([]);
   const [groupname, setGroupname] = useState("");
+  var images = [];
 
   useEffect(() => {
     getGroups();
-  });
+    // createImagearray();
+  },[]);
 
-  const getGroups = () => {
-    fetch("http://192.168.1.6:3000/groups/findgroups")
+  const getGroups = async() => {
+    const userId = await AsyncStorage.getItem("userId");
+    fetch("http://192.168.1.6:3000/groups/findgroups/"+userId)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => setGroups(data.groups));
   };
 
   const openModal = (placement) => {
@@ -92,6 +96,10 @@ const GroupScreen = () => {
       console.log(err);
     }
   };
+
+  // const onRefresh = () =>{
+
+  // }
 
   const data = [
     {
@@ -186,24 +194,25 @@ const GroupScreen = () => {
       </Modal>
       <Box mt="5">
         <FlatList
-          data={data}
+          data={groups}
+          // onRefresh={() => onRefresh()}
           renderItem={({ item }) => (
             <Box
               borderBottomWidth="1"
               _dark={{
                 borderColor: "muted.50",
               }}
-              borderColor="muted.800"
+              borderColor="muted.300"
               pl={["0", "4"]}
               pr={["0", "5"]}
               py="2"
             >
               <HStack space={[2, 3]} justifyContent="space-between">
+                
                 <Avatar
                   size="48px"
-                  source={{
-                    uri: item.avatarUrl,
-                  }}
+                  // source={require('./images/'+item.group_avatar)} this is not working
+                  source={require('./images/e6c94fbee071bf5ca72081d1ace6198d.jpg')} //only this works
                 />
                 <VStack>
                   <Text
@@ -213,7 +222,7 @@ const GroupScreen = () => {
                     color="coolGray.800"
                     bold
                   >
-                    {item.fullName}
+                    {item.group_name}
                   </Text>
                   <Text
                     color="coolGray.600"
@@ -238,7 +247,7 @@ const GroupScreen = () => {
               </HStack>
             </Box>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.group_id}
         />
       </Box>
       <Fab
