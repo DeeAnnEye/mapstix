@@ -4,7 +4,7 @@ const Redis = require("ioredis");
 const redis = new Redis();
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
-const upload = multer({ dest: "../comps/images" });
+const upload = multer({ dest: "./public/images"});
 
 router.get("/findgroups/:id", async (req, res, next) => {
   const id = req.params.id;
@@ -31,7 +31,7 @@ router.post("/create", upload.single("groupAvatar"), async (req, res, next) => {
   redis.hset(group_id, "group_id", id);
   redis.hset(group_id, "group_name", groupName);
   redis.hset(group_id, "admin_id", admin_id);
-  redis.hset(group_id, "group_avatar", req.file.filename + ".jpg");
+  redis.hset(group_id, "group_avatar", "http://192.168.1.6:3000/public/images/"+req.file.filename);
 
   await redis.lpush(group_members, admin_id);
   await redis.lpush(user_group, id);
