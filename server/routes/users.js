@@ -9,6 +9,31 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
+router.get("/pic/, function(req,res,next) {
+           // Extracting file extension
+        var ext = path.extname(action);
+ 
+        // Setting default Content-Type
+        var contentType = "text/plain";
+ 
+        // Checking if the extension of
+        // image is '.png'
+        if (ext === ".png") {
+            contentType = "image/png";
+        }
+ 
+        // Setting the headers
+        res.writeHead(200, {
+            "Content-Type": contentType });
+ 
+        // Reading the file
+        fs.readFile(filePath,
+            function (err, content) {
+                // Serving the image
+                res.end(content);
+            });
+           });
+
 router.post("/login", async (req, res, next) => {
   const user = await redis.hgetall(req.body.username);
   // console.log(user)
