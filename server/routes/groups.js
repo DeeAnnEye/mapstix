@@ -21,6 +21,16 @@ router.get("/findgroups/:id", async (req, res, next) => {
     .send({ success: true, message: "group created", groups: temp });
 });
 
+router.get("/getgroup/:id", async (req, res, next) => {
+  const id = req.params.id;
+  const groupId = "group:" + id;
+  const group = await redis.hgetall(groupId);
+  // console.log(group)
+  res
+    .status(200)
+    .send({ success: true, message: "group found", group: group });
+});
+
 router.post("/create", upload.single("groupAvatar"), async (req, res, next) => {
   const id = uuidv4();
   const group_id = "group:" + id;

@@ -48,9 +48,7 @@ const AppNavigator = ({ navigation }) => {
     }
   };
 
-  return !state ? (
-    <AuthNavigator />
-  ) : (
+  return state ? (
     <Stack.Navigator>
       <Stack.Screen
         options={{
@@ -72,7 +70,9 @@ const AppNavigator = ({ navigation }) => {
         name="Home"
         component={Home}
       />
-    </Stack.Navigator>
+    </Stack.Navigator>    
+  ) : (
+    <AuthNavigator />
   );
 };
 

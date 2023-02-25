@@ -27,8 +27,8 @@ const Index = ({ navigation }) => {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Auth" component={AuthNavigator} />
           <Stack.Screen name="App" component={AppNavigator} />
+          <Stack.Screen name="Auth" component={AuthNavigator} />          
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

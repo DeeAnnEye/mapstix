@@ -6,16 +6,23 @@ import {
   Heading,
   Center,
   Button,
+  TouchableOpacity,
   Pressable,
+  ArrowForwardIcon,
   Icon,
+  HStack,
 } from "native-base";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import CountryPicker from "react-native-country-picker-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
   const [data, setData] = useState("");
   const [show, setShow] = useState(false);
+  const [countryCode, setcountryCode] = useState("IN");
+  const [callingCode, setcallingCode] = useState("91");
 
   const storeData = async (value) => {
     try {
@@ -28,6 +35,8 @@ const Login = ({ navigation }) => {
 
   const handleClick = async (data) => {
     try {
+      //192.168.43.193:3000
+      //192.168.1.6:3000
       const url = "http://192.168.1.6:3000/users/login";
       const response = await fetch(url, {
         method: "POST",
@@ -45,11 +54,11 @@ const Login = ({ navigation }) => {
       } else {
         const data = await response.json();
         storeData(data);
-        // navigation.reset({
-        //   index: 0,
-        //   routes: [{ name: "App" }],
-        // });
-        navigation.navigate('App')
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "App" }],
+        });
+        // navigation.navigate('App')
       }
     } catch (err) {
       console.log(err);
@@ -62,7 +71,7 @@ const Login = ({ navigation }) => {
         <Heading mt="40" size="lg" alignSelf="center" color="violet.700">
           Mapstix
         </Heading>
-        <Input
+        {/* <Input
           mt="36"
           placeholder="Username"
           variant="underlined"
@@ -72,9 +81,40 @@ const Login = ({ navigation }) => {
           // style={{ color: "#fff" }}
           focusOutlineColor="violet.700"
           onChangeText={(text) => setData({ ...data, username: text })}
-        ></Input>
+        ></Input> */}
+        <SafeAreaView alignSelf="center">
+        <HStack  mt="50">
+                <CountryPicker
+                  countryCode={countryCode}
+                  withFilter
+                  withFlag
+                  withAlphaFilter={false}
+                  withCurrencyButton={false}
+                  withCallingCode
+                  onSelect={(country) => {
+                    const { cca2, callingCode } = country;
+                    setcountryCode(cca2);
+                    setcallingCode(callingCode[0]);
+                  }}
+                />
+                <Input
+                  placeholder="Phone number"
+                  variant="underlined"
+                  borderColor="violet.700"
+                  w="64"
+                  keyboardType="numeric"
+                  alignSelf="center"
+                  // style={{ color: "#fff" }}
+                  focusOutlineColor="violet.700"
+                  onChangeText={(text) =>
+                    setData({ ...data,phone: "+"+callingCode + " " +text })
+                  }
+                ></Input>
+              </HStack>
+              
         <Input
           mt="50"
+          ml="42"
           // secureTextEntry={true}
           placeholder="Enter password"
           variant="underlined"
@@ -109,6 +149,7 @@ const Login = ({ navigation }) => {
         >
           <Text style={{ color: "#fff" }}>Login</Text>
         </Button>
+        </SafeAreaView>
       </Container>
     </NativeBaseProvider>
   );

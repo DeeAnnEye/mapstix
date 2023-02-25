@@ -10,7 +10,8 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/login", async (req, res, next) => {
-  const user = await redis.hgetall(req.body.username);
+  const userId = "user:"+req.body.phone;
+  const user = await redis.hgetall(userId);
   // console.log(user)
   if (user.password != req.body.password) {
     res.status(400).send({
@@ -29,12 +30,19 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/signup", function (req, res, next) {
   const id = uuidv4();
+  const userId = "user:"+req.body.phone;
   if (req.body.cPassword === req.body.password) {
-    redis.hset(req.body.username, "id", id);
-    redis.hset(req.body.username, "username", req.body.username);
-    redis.hset(req.body.username, "email", req.body.email);
-    redis.hset(req.body.username, "password", req.body.password);
-    res.status(200).send({ success: true, message: "signup success" });
+    redis.hset(userId, "id", id);
+    redis.hset(userId, "username", req.body.username);
+    redis.hset(userId, "email", req.body.email);
+    redis.hset(userId, "password", req.body.password);
+    redis.hset(userId, "phone", req.body.phone);
+    res.status(200).send({
+      success: true,
+      message: "signup success",
+      userId: id,
+      userName: req.body.username,
+    });
   } else {
     res
       .status(400)

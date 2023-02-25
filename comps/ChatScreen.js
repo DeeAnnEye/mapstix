@@ -18,7 +18,7 @@ const ChatScreen = () => {
   const data = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      fullName: "useless",
+      fullName: "user 1",
       timeStamp: "12:47 PM",
       recentText: "Good Day!",
       avatarUrl:
@@ -26,7 +26,7 @@ const ChatScreen = () => {
     },
     {
       id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      fullName: "stupid",
+      fullName: "user 2",
       timeStamp: "11:11 PM",
       recentText: "Cheer up, there!",
       avatarUrl:
@@ -34,14 +34,14 @@ const ChatScreen = () => {
     },
     {
       id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      fullName: "braindead",
+      fullName: "user 3",
       timeStamp: "6:22 PM",
       recentText: "Good Day!",
       avatarUrl: "https://miro.medium.com/max/1400/0*0fClPmIScV5pTLoE.jpg",
     },
     {
       id: "68694a0f-3da1-431f-bd56-142371e29d72",
-      fullName: "psycho",
+      fullName: "user 4",
       timeStamp: "8:56 PM",
       recentText: "All the best",
       avatarUrl:
@@ -49,7 +49,7 @@ const ChatScreen = () => {
     },
     {
       id: "28694a0f-3da1-471f-bd96-142456e29d72",
-      fullName: "borderline idiot",
+      fullName: "user 5",
       timeStamp: "12:47 PM",
       recentText: "I will call today.",
       avatarUrl:
@@ -58,7 +58,7 @@ const ChatScreen = () => {
   ];
   return (
     <NativeBaseProvider>
-      <Box mt="5">
+      <Box mt="2" mx="1" >
         <FlatList
           data={data}
           renderItem={({ item }) => (

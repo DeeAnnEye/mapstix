@@ -18,20 +18,22 @@ import {
   Image,
   NativeBaseProvider,
 } from "native-base";
+import {TouchableOpacity} from 'react-native';
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Group from "./Group";
 
 const GroupScreen = () => {
   const [placement, setPlacement] = useState(undefined);
   const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
+  const [showGroup, setShowGroup] = useState(false);
   const [groups, setGroups] = useState([]);
   const [groupname, setGroupname] = useState("");
-  var images = [];
+  const [groupId,setGroupId] = useState(0);
 
   useEffect(() => {
     getGroups();
-    // createImagearray();
   },[]);
 
   const getGroups = async() => {
@@ -45,6 +47,11 @@ const GroupScreen = () => {
     setOpen(true);
     setPlacement(placement);
   };
+
+  const openGroup=(id)=>{
+  setGroupId(id)
+   setShowGroup(true);
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -91,58 +98,18 @@ const GroupScreen = () => {
       } else {
         const msg = await response.json();
         setOpen(false);
+        getGroups();
       }
     } catch (err) {
       console.log(err);
     }
   };
-
-  // const onRefresh = () =>{
-
-  // }
-  // const data = [
-  //   {
-  //     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-  //     fullName: "useless",
-  //     timeStamp: "12:47 PM",
-  //     recentText: "Good Day!",
-  //     avatarUrl:
-  //       "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  //   },
-  //   {
-  //     id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-  //     fullName: "stupid",
-  //     timeStamp: "11:11 PM",
-  //     recentText: "Cheer up, there!",
-  //     avatarUrl:
-  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyEaZqT3fHeNrPGcnjLLX1v_W4mvBlgpwxnA&usqp=CAU",
-  //   },
-  //   {
-  //     id: "58694a0f-3da1-471f-bd96-145571e29d72",
-  //     fullName: "braindead",
-  //     timeStamp: "6:22 PM",
-  //     recentText: "Good Day!",
-  //     avatarUrl: "https://miro.medium.com/max/1400/0*0fClPmIScV5pTLoE.jpg",
-  //   },
-  //   {
-  //     id: "68694a0f-3da1-431f-bd56-142371e29d72",
-  //     fullName: "psycho",
-  //     timeStamp: "8:56 PM",
-  //     recentText: "All the best",
-  //     avatarUrl:
-  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr01zI37DYuR8bMV5exWQBSw28C1v_71CAh8d7GP1mplcmTgQA6Q66Oo--QedAN1B4E1k&usqp=CAU",
-  //   },
-  //   {
-  //     id: "28694a0f-3da1-471f-bd96-142456e29d72",
-  //     fullName: "borderline idiot",
-  //     timeStamp: "12:47 PM",
-  //     recentText: "I will call today.",
-  //     avatarUrl:
-  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&usqp=CAU",
-  //   },
-  // ];
   return (
     <NativeBaseProvider>
+
+    {!showGroup?(
+      <>
+      {/* Group Create Modal */}
       <Modal isOpen={open} onClose={() => setOpen(false)} safeAreaTop={true}>
         <Modal.Content maxWidth="350">
           <Modal.CloseButton />
@@ -191,11 +158,14 @@ const GroupScreen = () => {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-      <Box mt="5">
+
+      {/* GroupList */}
+      <Box mt="2" mx="1" >
         <FlatList
           data={groups}
           // onRefresh={() => onRefresh()}
           renderItem={({ item }) => (
+            <TouchableOpacity onPress={()=>openGroup(item.group_id)}>
             <Box
               borderBottomWidth="1"
               _dark={{
@@ -243,6 +213,7 @@ const GroupScreen = () => {
                 </Text>
               </HStack>
             </Box>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.group_id}
         />
@@ -254,6 +225,8 @@ const GroupScreen = () => {
         onPress={() => openModal("center")}
         icon={<AddIcon />}
       />
+      </>
+      ):<Group id={groupId} setShowGroup={setShowGroup}/>}
     </NativeBaseProvider>
   );
 };
