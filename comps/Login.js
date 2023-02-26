@@ -15,6 +15,7 @@ import {
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState, useRef } from "react";
+import { API_URL } from "./AppConfig";
 import CountryPicker from "react-native-country-picker-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -37,7 +38,7 @@ const Login = ({ navigation }) => {
     try {
       //192.168.43.193:3000
       //192.168.1.6:3000
-      const url = "http://192.168.1.6:3000/users/login";
+      const url = API_URL+"/users/login";
       const response = await fetch(url, {
         method: "POST",
         headers: {

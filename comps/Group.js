@@ -6,28 +6,96 @@ import {
   Divider,
   Fab,
   AddIcon,
+  Modal,
+  VStack,
+  Heading,
+  FormControl,
+  Input,
+  Icon,
+  Button,
   CloseIcon,
 } from "native-base";
 import { Entypo } from "@expo/vector-icons";
+import { API_URL } from "./AppConfig";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
 const Group = ({ id, setShowGroup }) => {
   const [group, setGroup] = useState(null);
+  const [placement, setPlacement] = useState(undefined);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     getGroup();
   }, []);
 
   const getGroup = async () => {
-    fetch("http://192.168.1.6:3000/groups/getgroup/" + id)
+    fetch(API_URL+"/groups/getgroup/" + id)
       .then((response) => response.json())
       .then((data) => setGroup(data.group));
+  };
+
+  const openModal = (placement) => {
+    setOpen(true);
+    setPlacement(placement);
   };
 
   return (
     <>
       {group ? (
         <>
+          <Modal
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            safeAreaTop={true}
+          >
+            <Modal.Content maxWidth="350">
+              <Modal.CloseButton />
+              <Modal.Header>Find Friends</Modal.Header>
+              <Modal.Body>
+                <FormControl>
+                  {/* <FormControl.Label>Group Name</FormControl.Label>
+              <Input onChangeText={(text) => setGroupname(text)} /> */}
+                  <VStack w="100%" space={5} alignSelf="center">
+                    <Input
+                      placeholder="Search"
+                      variant="filled"
+                      width="100%"
+                      borderRadius="10"
+                      py="1"
+                      px="2"
+                      InputLeftElement={
+                        <Icon
+                          ml="2"
+                          size="4"
+                          color="gray.400"
+                          as={<Ionicons name="ios-search" />}
+                        />
+                      }
+                    />
+                  </VStack>
+                </FormControl>
+                <FormControl></FormControl>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button.Group space={2}>
+                  <Button
+                    variant="ghost"
+                    colorScheme="violet"
+                    onPress={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onPress={() => createGroup()} colorScheme="violet">
+                    Add Friend
+                  </Button>
+                </Button.Group>
+              </Modal.Footer>
+            </Modal.Content>
+          </Modal>
+
           <Box
             mx="3"
             mb="3"
@@ -50,7 +118,7 @@ const Group = ({ id, setShowGroup }) => {
           <Fab
             renderInPortal={false}
             shadow={2}
-            containerStyle={{left: '50%'}}
+            containerStyle={{ left: "50%" }}
             placement="bottom-left"
             size="sm"
             w="48"
@@ -62,6 +130,7 @@ const Group = ({ id, setShowGroup }) => {
             placement="bottom-right"
             colorScheme="violet"
             size="lg"
+            onPress={() => openModal("center")}
             icon={<AddIcon />}
           />
         </>

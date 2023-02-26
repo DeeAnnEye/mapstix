@@ -20,6 +20,7 @@ import {
 } from "native-base";
 import {TouchableOpacity} from 'react-native';
 import * as ImagePicker from "expo-image-picker";
+import { API_URL } from "./AppConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Group from "./Group";
 
@@ -38,7 +39,7 @@ const GroupScreen = () => {
 
   const getGroups = async() => {
     const userId = await AsyncStorage.getItem("userId");
-    fetch("http://192.168.1.6:3000/groups/findgroups/"+userId)
+    fetch(API_URL+"/groups/findgroups/"+userId)
       .then((response) => response.json())
       .then((data) => setGroups(data.groups));
   };
@@ -81,7 +82,7 @@ const GroupScreen = () => {
       type: "image/jpg",
     });
     try {
-      const url = "http://192.168.1.6:3000/groups/create";
+      const url = API_URL+"/groups/create";
       const response = await fetch(url, {
         method: "POST",
         headers: {
