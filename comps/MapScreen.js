@@ -19,6 +19,16 @@ const MapScreen = () => {
   const map = useRef();
   const [location, setLocation] = useState(null);
 
+  useEffect(()=>{
+    (async()=>{
+      if(map.current){
+        let {coords} = await Location.getCurrentPositionAsync({});
+        // console.log(loc)
+      map.current.animateCamera({center: {latitude:coords.latitude,longitude:coords.longitude},pitch: 45, heading: 20,altitude: 200, zoom: 15},{duration:1000})
+      }
+    })()
+    
+  },[])
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,6 +65,17 @@ const MapScreen = () => {
           showsUserLocation={true}
           style={{ width: "100%", height: "100%" }}
           provider={MapView.PROVIDER_GOOGLE}
+
+          // onLayout={() => {
+          //   map.current.animateCamera({
+          //      center: {
+          //      latitude: location.coords.latitude,
+          //      longitude: location.coords.longitude,
+          //   },
+          //      heading: 0,
+          //      pitch: 90,
+          //    });
+          // }}
         />
       </Container>
     </NativeBaseProvider>
