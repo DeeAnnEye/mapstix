@@ -72,7 +72,7 @@ const MapScreen = () => {
           zoomEnabled={true}
           initialCamera={initialCamera}
           showsUserLocation={true}
-          onPress={(e) => setMarker({ marker: e.nativeEvent.coordinate })}
+          onPress={(e) => setMarker({ latlng: e.nativeEvent.coordinate })}
           style={{ width: "100%", height: "100%" }}
           provider={MapView.PROVIDER_GOOGLE}
 
@@ -81,7 +81,7 @@ const MapScreen = () => {
           //      center: {
           //      latitude: location.coords.latitude,
           //      longitude: location.coords.longitude,
-          //   },
+          //   }, setMarker({ marker: e.nativeEvent.coordinate })
           //      heading: 0,
           //      pitch: 90,
           //    });
@@ -89,8 +89,8 @@ const MapScreen = () => {
         >
           {
             // if state contains marker variable with a valid value, render the marker
-            marker && <MapView.Marker coordinate={{latitude: marker.latitude,
-              longitude: marker.longitude}} />
+            marker && <Marker coordinate={{latitude: marker.latlng.latitude,
+              longitude: marker.latlng.longitude}} />
           }
         </MapView>
       </Container>
