@@ -9,11 +9,14 @@ import {
   Modal,
   VStack,
   Heading,
+  FlatList,
   FormControl,
   Input,
+  Center,
   Icon,
   Button,
   CloseIcon,
+  ScrollView,
 } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import { API_URL } from "./AppConfig";
@@ -24,15 +27,22 @@ const Group = ({ id, setShowGroup }) => {
   const [group, setGroup] = useState(null);
   const [placement, setPlacement] = useState(undefined);
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState(null);
 
   useEffect(() => {
     getGroup();
   }, []);
 
   const getGroup = async () => {
-    fetch(API_URL+"/groups/getgroup/" + id)
+    fetch(API_URL + "/groups/getgroup/" + id)
       .then((response) => response.json())
       .then((data) => setGroup(data.group));
+  };
+
+  const findUser = async (phoneNumber) => {
+    fetch(API_URL + "/users/findUsers/" + phoneNumber)
+      .then((response) => response.json())
+      .then((data) => setUsers(data.users));
   };
 
   const openModal = (placement) => {
@@ -61,7 +71,9 @@ const Group = ({ id, setShowGroup }) => {
                       placeholder="Search"
                       variant="filled"
                       width="100%"
+                      borderColor="violet.700"
                       borderRadius="10"
+                      onChangeText={(text) => findUser(text)}
                       py="1"
                       px="2"
                       InputLeftElement={
@@ -73,6 +85,19 @@ const Group = ({ id, setShowGroup }) => {
                         />
                       }
                     />
+                    {users && (
+                      <ScrollView>
+                        <TouchableOpacity>
+                          <Center py="4" bg="violet.100">
+                            {users.username? (
+                              <Text>{users.username}</Text>
+                            ) : (
+                              <Text>No user found</Text>
+                            )}
+                          </Center>
+                        </TouchableOpacity>
+                      </ScrollView>
+                    )}
                   </VStack>
                 </FormControl>
                 <FormControl></FormControl>

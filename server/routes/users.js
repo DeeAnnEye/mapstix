@@ -28,6 +28,16 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.get("/findUsers/:phone", async (req, res, next) => {
+  const phone = req.params.phone;
+  const userId = "user:" + phone;
+  const users = await redis.hgetall(userId);
+  // console.log(group)
+  res
+    .status(200)
+    .send({ success: true, message: "group found", users: users });
+});
+
 router.post("/signup", function (req, res, next) {
   const id = uuidv4();
   const userId = "user:"+req.body.phone;
@@ -36,7 +46,7 @@ router.post("/signup", function (req, res, next) {
     redis.hset(userId, "username", req.body.username);
     redis.hset(userId, "email", req.body.email);
     redis.hset(userId, "password", req.body.password);
-    redis.hset(userId, "phone", req.body.phone);
+    redis.hset(userId, "phone", "+"+req.body.callingCode + " " +req.body.phone);
     res.status(200).send({
       success: true,
       message: "signup success",

@@ -108,7 +108,7 @@ const Login = ({ navigation }) => {
                   // style={{ color: "#fff" }}
                   focusOutlineColor="violet.700"
                   onChangeText={(text) =>
-                    setData({ ...data,phone: "+"+callingCode + " " +text })
+                    setData({ ...data,phone: text })
                   }
                 ></Input>
               </HStack>

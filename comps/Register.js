@@ -45,7 +45,7 @@ const Register = ({ navigation }) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(signupdata),
+        body: JSON.stringify({...signupdata,callingCode:callingCode}),
       });
 
       if (!response.ok) {
@@ -171,7 +171,7 @@ const Register = ({ navigation }) => {
                 onPress={() => handleClick(signupdata)}
               >
                 <Text style={{ color: "#fff" }}>
-                  Next <ArrowForwardIcon />
+                  Sign Up
                 </Text>
               </Button>
             </>
@@ -201,7 +201,7 @@ const Register = ({ navigation }) => {
                   // style={{ color: "#fff" }}
                   focusOutlineColor="violet.700"
                   onChangeText={(text) =>
-                    setsignupdata({ phone: "+"+callingCode + " " +text })
+                    setsignupdata({ phone: text })
                   }
                 ></Input>
               </HStack>

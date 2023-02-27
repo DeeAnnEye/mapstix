@@ -18,17 +18,26 @@ import * as Location from "expo-location";
 const MapScreen = () => {
   const map = useRef();
   const [location, setLocation] = useState(null);
+  const [marker, setMarker] = useState(null);
 
-  useEffect(()=>{
-    (async()=>{
-      if(map.current){
-        let {coords} = await Location.getCurrentPositionAsync({});
+  useEffect(() => {
+    (async () => {
+      if (map.current) {
+        let { coords } = await Location.getCurrentPositionAsync({});
         // console.log(loc)
-      map.current.animateCamera({center: {latitude:coords.latitude,longitude:coords.longitude},pitch: 45, heading: 20,altitude: 200, zoom: 15},{duration:1000})
+        map.current.animateCamera(
+          {
+            center: { latitude: coords.latitude, longitude: coords.longitude },
+            pitch: 45,
+            heading: 20,
+            altitude: 200,
+            zoom: 15,
+          },
+          { duration: 1000 }
+        );
       }
-    })()
-    
-  },[])
+    })();
+  }, []);
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -63,6 +72,7 @@ const MapScreen = () => {
           zoomEnabled={true}
           initialCamera={initialCamera}
           showsUserLocation={true}
+          onPress={(e) => setMarker({ marker: e.nativeEvent.coordinate })}
           style={{ width: "100%", height: "100%" }}
           provider={MapView.PROVIDER_GOOGLE}
 
@@ -76,7 +86,13 @@ const MapScreen = () => {
           //      pitch: 90,
           //    });
           // }}
-        />
+        >
+          {
+            // if state contains marker variable with a valid value, render the marker
+            marker && <MapView.Marker coordinate={{latitude: marker.latitude,
+              longitude: marker.longitude}} />
+          }
+        </MapView>
       </Container>
     </NativeBaseProvider>
   );
