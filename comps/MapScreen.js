@@ -14,6 +14,8 @@ import { StyleSheet } from "react-native";
 import MapView, { Marker, AnimatedRegion } from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
+import {io} from 'socket.io-client';
+import { API_URL } from "./AppConfig";
 
 const MapScreen = () => {
   const map = useRef();
@@ -51,6 +53,23 @@ const MapScreen = () => {
     })();
   }, []);
 
+  useEffect(()=> {
+    (async()=>{
+      const socket = io(API_URL+"/groupSpace", {
+        reconnection: true,
+        transports: ['websocket', 'pooling'],
+        allowUpgrades: false,
+        pingTimeout: 30000
+      })
+
+      await socket.on('connect', () => {
+        console.log('Connected to socket server');
+
+      });
+
+    })()
+  })
+
   const initialCamera = {
     center: {
       latitude: 10.0618591,
@@ -87,11 +106,11 @@ const MapScreen = () => {
           //    });
           // }}
         >
-          {
+          {/* {
             // if state contains marker variable with a valid value, render the marker
             marker && <Marker coordinate={{latitude: marker.latlng.latitude,
               longitude: marker.latlng.longitude}} />
-          }
+          } */}
         </MapView>
       </Container>
     </NativeBaseProvider>

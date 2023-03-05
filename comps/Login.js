@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
 
   const handleClick = async (data) => {
     try {
-      //192.168.43.193:3000
+      //192.168.43.193:3000 192.168.43.59:3000
       //192.168.1.6:3000
       const url = API_URL+"/users/login";
       const response = await fetch(url, {
