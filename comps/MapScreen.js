@@ -6,15 +6,19 @@ import {
   Container,
   Heading,
   Center,
+  Image,
+  Avatar,
   Button,
+  View,
   Pressable,
   Icon,
 } from "native-base";
+import { Svg } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import MapView, { Marker, AnimatedRegion } from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
-import {io} from 'socket.io-client';
+import { io } from "socket.io-client";
 import { API_URL } from "./AppConfig";
 
 const MapScreen = () => {
@@ -53,22 +57,24 @@ const MapScreen = () => {
     })();
   }, []);
 
-  useEffect(()=> {
-    (async()=>{
-      const socket = io(API_URL+"/groupSpace", {
+  useEffect(() => {
+    (async () => {
+      const socket = io(API_URL + "/groupSpace", {
         reconnection: true,
-        transports: ['websocket', 'pooling'],
+        transports: ["websocket", "pooling"],
         allowUpgrades: false,
-        pingTimeout: 30000
-      })
-
-      await socket.on('connect', () => {
-        console.log('Connected to socket server');
-
+        pingTimeout: 30000,
       });
 
-    })()
-  })
+      await socket.on("connect", () => {
+        console.log("Connected to socket server");
+      });
+
+      await socket.on("disconnect", async () => {
+        console.log("disconnected from socket server");
+      });
+    })();
+  });
 
   const initialCamera = {
     center: {
@@ -94,23 +100,52 @@ const MapScreen = () => {
           onPress={(e) => setMarker({ latlng: e.nativeEvent.coordinate })}
           style={{ width: "100%", height: "100%" }}
           provider={MapView.PROVIDER_GOOGLE}
-
-          // onLayout={() => {
-          //   map.current.animateCamera({
-          //      center: {
-          //      latitude: location.coords.latitude,
-          //      longitude: location.coords.longitude,
-          //   }, setMarker({ marker: e.nativeEvent.coordinate })
-          //      heading: 0,
-          //      pitch: 90,
-          //    });
-          // }}
         >
-          {/* {
+          {
             // if state contains marker variable with a valid value, render the marker
-            marker && <Marker coordinate={{latitude: marker.latlng.latitude,
-              longitude: marker.latlng.longitude}} />
-          } */}
+            marker && (
+              <Marker
+                coordinate={{
+                  latitude: marker.latlng.latitude,
+                  longitude: marker.latlng.longitude,
+                }}
+                
+              >
+               
+                <View
+                  backgroundColor="violet.700"
+                  borderRadius="2xl"
+                  // pl="1"
+                  style={{
+                    flexDirection: "row",
+                    width: 90,
+                    height: 30,
+                  }}
+                >
+                  <Svg width={40} height={30}>
+                    <Avatar
+                      size="29px"
+                      source={{
+                        uri: "http://192.168.1.6:3000/public/images/24af9536fc053ef0e67784794944df90",
+                      }}
+                    />
+                  </Svg>
+
+                  <Text
+                    style={{
+                      marginLeft: 2,
+                      fontSize: 9,
+                      color: "#ffffff",
+                      fontWeight: "bold",
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    hi
+                  </Text>
+                </View>
+              </Marker>
+            )
+          }
         </MapView>
       </Container>
     </NativeBaseProvider>
