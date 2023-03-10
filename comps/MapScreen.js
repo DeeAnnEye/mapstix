@@ -25,6 +25,8 @@ const MapScreen = () => {
   const map = useRef();
   const [location, setLocation] = useState(null);
   const [marker, setMarker] = useState(null);
+  const [friendloc, setFriendLoc] = useState([])
+
 
   useEffect(() => {
     (async () => {
@@ -69,6 +71,28 @@ const MapScreen = () => {
       await socket.on("connect", () => {
         console.log("Connected to socket server");
       });
+
+      let locations = await Location.watchPositionAsync({
+        accuracy: Location.Accuracy.High,
+        distanceInterval: 2,
+        timeInterval: 8000 
+      }, 
+      async(loc) => { 
+        const userPhone = await AsyncStorage.getItem("userPhone");
+        const userName = await AsyncStorage.getItem("userName");
+
+        socket.emit('location', {
+          userLoc: loc,
+          userPhone: userPhone,
+          userName: userName
+        }); });
+
+        await socket.on("userLocations", (locations) => {
+          let temp = {...friendloc}
+          temp[locations.userPhone] = {...locations}
+          console.log(temp)
+          setFriendLoc(temp)
+        });
 
       await socket.on("disconnect", async () => {
         console.log("disconnected from socket server");

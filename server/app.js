@@ -41,7 +41,10 @@ app.use('/groups', groupsRouter);
 
 //socket connection
 groupSpace.on("connection", (socket) => {
-  console.log('socket connected');
+  socket.on('location', (location) => {
+
+    socket.broadcast.emit('userLocations', location);
+  })
 });
 
 // catch 404 and forward to error handler

@@ -29,6 +29,7 @@ const Login = ({ navigation }) => {
     try {
       await AsyncStorage.setItem("userId", value.userId);
       await AsyncStorage.setItem("userName", value.userName);
+      await AsyncStorage.setItem("userPhone", data.phone);
     } catch (e) {
       console.log(e);
     }
@@ -53,8 +54,8 @@ const Login = ({ navigation }) => {
         console.log("Looks like there was a problem.", err);
         return;
       } else {
-        const data = await response.json();
-        storeData(data);
+        const resData = await response.json();
+        storeData(resData);
         navigation.reset({
           index: 0,
           routes: [{ name: "App" }],
